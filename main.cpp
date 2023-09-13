@@ -125,51 +125,91 @@ auto removeMultiples(std::list<int> primes, int n) {
         for (auto prime : primes)
         {
 
-                if (prime % *x != 0 && prime > *x)
+                if ((prime % *x != 0) || (prime == *x))
                 {
                         placeholder.push_back(prime);
                 }
-                else if (prime % *x == 0 && prime > *x)
-                {
 
-                }
-                else
-                {
-                        placeholder.push_back(prime);
-                }
         }
         return placeholder;
 }
 
-auto sieveoferatosthenes()
+bool IsPrime(int n)
+{
+        if (n == 2 || n == 3)
+                return true;
+
+        if (n <= 1 || n % 2 == 0 || n % 3 == 0)
+                return false;
+
+        for (int i = 5; i * i <= n; i += 6)
+        {
+                if (n % i == 0 || n % (i + 2) == 0)
+                        return false;
+        }
+        return true;
+}
+
+int sieveoferatosthenes()
 {
         std::list<int> primes;
         std::list<int> placeholder;
-        for (int i = 2; i <= 100; i++) {
+        for (int i = 2; i <= int(pow(600851475143,0.5)); i++) {
                 primes.push_back(i);
         }
-        int j = 0;
-        while (j <= 50) {
+        for (int j = 0; j <= 0; j++) {
                 primes = removeMultiples(primes, j);
-                j++;
         }
         for (auto i : primes)
         {
-                std::cout << i << ' ';
+                if (600851475143 % i == 0) {
+                        if (IsPrime(i)) {
+                                placeholder.push_back(i);
+                        }
+                }
+
         }
-        std::cout << primes.size() << " ";
-        return 0;
+        return (placeholder.back());
+}
+
+/*Despite all the above effort this on is faster*/
+int primefactors(int n)
+{
+        std::list<int> primes;
+        std::list<int> placeholder;
+        for (int i = 2; i <= int(pow(n, 0.5)); i++) {
+                primes.push_back(i);
+        }
+        for (auto i : primes)
+        {
+                if (n % i == 0) {
+                        if (IsPrime(i)) {
+                                placeholder.push_back(i);
+                                std::cout << i << " ";
+                        }
+                }
+
+        }
+
+        return (0);
 }
 
 /*end non functional code*/
  
+auto quadraticsieve()
+{
 
+}
 
 int main()
 {
         auto start = std::chrono::high_resolution_clock::now();
         int problem;
+
+        int x = pow(759, 2);
+        problem = primefactors(x % 539873);
         auto elapsed = std::chrono::high_resolution_clock::now() - start;
         long long microseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
+        printf("The answer is %d, This was achieved in %d", problem, microseconds);
         return 0;
 }
