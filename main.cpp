@@ -4,99 +4,12 @@
 #include <cmath>
 #include <list>
 
-int problem1_at1(int x)
-{
-        long long sum1 = 0;
-        for (long long i = 0; i < x; i++)
-        {
-                if (i % 3 == 0 || i % 5 == 0)
-                {
-                        sum1 += i;
-                }
-        }
-        return sum1;
-}
 
-int problem1_at2(int x)
-{
-        int i_3;
-        int i_5;
-        int sum1 = 0;
-        for (int i = 0; i < int(x / 3); i++)
-        {
-                i_3 = i * 3;
-                i_5 = i * 5;
-                if ((i_5 > x) || (i_5 % 3 == 0))
-                {
-                        sum1 += i_3;
-                }
-                else
-                {
-                        sum1 += (i_3 + i_5);
-                }
-        }
-        return (sum1 - 1);
-}
-
-int problem1_at3(int x)
-{
-        int sum1 = 0;
-        for (int i = 0; i <= int(x / 3); i++)
-        {
-                sum1 += i * 8;
-        }
-        for (int n = int(x / 5); n <= int(x / 3); n++)
-        {
-                sum1 -= 5 * n;
-        }
-        for (int j = 0; j <= int(x / 15); j++)
-        {
-                sum1 -= 15 * j;
-        }
-        return sum1;
-}
-
-int problem1_at4(int x)
-{
-        int sum1 = 0;
-        for (int i = 0; i <= int(x / 3); i++)
-        {
-                sum1 += i * 8;
-                if (i >= int(x / 5))
-                {
-                        sum1 -= 5 * i;
-                }
-                if (i <= int(x / 15))
-                {
-                        sum1 -= 15 * i;
-                }
-        }
-        return sum1;
-}
-
-int problem1_at5(int x)
+int sumofmultiplesof3and5(int x)
 {
         return((3 * (int((x - 1) / 3) * (int((x - 1) / 3) + 1) / 2)) + (5 * (int((x - 1) / 5) * (int((x - 1) / 5) + 1) / 2)) - (15 * (int((x - 1) / 15) * (int((x - 1) / 15) + 1) / 2)));
 }
 
-int problem2_at1(long long x)
-{
-        int fib1 = 1;
-        int fib2 = 1;
-        int fib3;
-        int sum_even = 0;
-        while (fib1 < x)
-        {
-                fib3 = fib2;
-                fib2 = (fib1 + fib2);
-                fib1 = fib3;
-                if (fib2 % 2 == 0)
-                {
-                        sum_even += fib2;
-                }
-        }
-        return sum_even;
-}
 
 int fib(int x)
 {
@@ -118,7 +31,7 @@ int problem2_at2(int maxfib)
 }
 
 
-/*Code doesn't work need to look at it later*/
+/* removes multiples of index n in a list*/
 auto removeMultiples(std::list<int> primes, int n) {
         std::list<int> placeholder;
         auto x = std::next(primes.begin(), n);
@@ -134,6 +47,7 @@ auto removeMultiples(std::list<int> primes, int n) {
         return placeholder;
 }
 
+/*basic prime test found on wiki*/
 bool IsPrime(int n)
 {
         if (n == 2 || n == 3)
@@ -150,30 +64,22 @@ bool IsPrime(int n)
         return true;
 }
 
-int sieveoferatosthenes()
+/*Fairly good at getting the first few hundred primes but way too slow to be of any use*/
+std::list<int> sieveoferatosthenes(int n)
 {
         std::list<int> primes;
         std::list<int> placeholder;
-        for (int i = 2; i <= int(pow(600851475143,0.5)); i++) {
+        for (int i = 2; i <= n; i++) {
                 primes.push_back(i);
         }
-        for (int j = 0; j <= 0; j++) {
+        for (int j = 0; j <= 3; j++) {
                 primes = removeMultiples(primes, j);
         }
-        for (auto i : primes)
-        {
-                if (600851475143 % i == 0) {
-                        if (IsPrime(i)) {
-                                placeholder.push_back(i);
-                        }
-                }
-
-        }
-        return (placeholder.back());
+        return (primes);
 }
 
-/*Despite all the above effort this on is faster*/
-int primefactors(int n)
+
+int greatestprimefactors(int n)
 {
         std::list<int> primes;
         std::list<int> placeholder;
@@ -185,31 +91,79 @@ int primefactors(int n)
                 if (n % i == 0) {
                         if (IsPrime(i)) {
                                 placeholder.push_back(i);
-                                std::cout << i << " ";
                         }
                 }
-
         }
-
-        return (0);
+        return (placeholder.back());
 }
 
-/*end non functional code*/
  
 auto quadraticsieve()
 {
 
+        return 0;
+}
+
+int ReverseNumber(int num)
+{
+        int rev_num = 0, remainder = 0;
+        if (num % 10 == 0)
+        {
+                remainder = pow(10,3); 
+        }
+        while (num != 0) 
+        {
+                rev_num = rev_num * 10 + (num % 10);
+                num /= 10;
+        }
+        return(rev_num + remainder);
+}
+
+
+int CreatePalindrome(int num) {
+        int rev_num = ReverseNumber(num);
+        num *= 1000;
+        if (rev_num > 1000)
+        {
+                num = rev_num + num - 1000;
+        }
+        else
+        {
+                num += rev_num;
+        }
+        return(num);
+}
+
+int LargestPalindrome()
+{
+        int rev_num = 0;
+        std::list<int> solid_nums;  
+        std::list<int> palindrome_num; 
+        for (int i = 900; i < 1000; i++)
+        {
+                solid_nums.push_back(i);
+        }
+        for (auto n : solid_nums)
+        {
+                for (auto j : solid_nums) {
+                        if (n * j == ReverseNumber(n * j))
+                        {
+                            palindrome_num.push_back(n*j);
+                        }
+                        
+                }
+        }
+        palindrome_num.sort();
+        return (palindrome_num.back());
 }
 
 int main()
 {
         auto start = std::chrono::high_resolution_clock::now();
         int problem;
-
-        int x = pow(759, 2);
-        problem = primefactors(x % 539873);
+        problem = LargestPalindrome();
         auto elapsed = std::chrono::high_resolution_clock::now() - start;
         long long microseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
-        printf("The answer is %d, This was achieved in %d", problem, microseconds);
+        std::cout << "The answer is " << problem << " This was achieved in " << microseconds << " nanoseconds" << std::endl;
         return 0;
 }
