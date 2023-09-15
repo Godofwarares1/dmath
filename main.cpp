@@ -149,19 +149,53 @@ int LargestPalindrome()
                         if (n * j == ReverseNumber(n * j))
                         {
                             palindrome_num.push_back(n*j);
-                        }
-                        
+                        }   
                 }
         }
         palindrome_num.sort();
         return (palindrome_num.back());
 }
 
+int smallestevenlydivisible()
+{
+        std::list<int> primes;
+        std::list<int> nums;
+        std::list<int> result;
+        for (int i = 1; i <= 20; i++)
+        {
+                nums.push_back(i);
+        }
+        for (auto n : nums)
+        {
+                if (IsPrime(n)) {
+                        primes.push_back(n);
+                }
+        }
+        for (auto n : nums)
+        {
+                if (n <= 10)
+                {
+                        nums.remove(n);
+                }
+        }
+        for (auto n : nums)
+        {
+                for (auto j : primes)
+                {
+                        if (n % j == 0)
+                        {
+                                std::cout << n << " ";
+                        }
+                }
+        }
+        return 0;
+}
+
 int main()
 {
         auto start = std::chrono::high_resolution_clock::now();
         int problem;
-        problem = LargestPalindrome();
+        problem = smallestevenlydivisible(); 
         auto elapsed = std::chrono::high_resolution_clock::now() - start;
         long long microseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
         std::cout << "The answer is " << problem << " This was achieved in " << microseconds << " nanoseconds" << std::endl;
