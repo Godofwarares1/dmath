@@ -65,7 +65,7 @@ bool IsPrime(int n)
 }
 
 /*Fairly good at getting the first few hundred primes but way too slow to be of any use*/
-std::list<int> sieveoferatosthenes(int n)
+std::list<int> SieveOfEratosthenes(int n)
 {
         std::list<int> primes;
         std::list<int> placeholder;
@@ -156,46 +156,95 @@ int LargestPalindrome()
         return (palindrome_num.back());
 }
 
-int smallestevenlydivisible()
+int SmallestEvenlyDivisible(int n)
 {
-        std::list<int> primes;
-        std::list<int> nums;
-        std::list<int> result;
-        for (int i = 1; i <= 20; i++)
+        std::list<int> primes = SieveOfEratosthenes(n);
+        int product = 1;
+        for (auto j : primes)
         {
-                nums.push_back(i);
+                product *= pow(j,int(pow(n,(1.0 / j))));
         }
-        for (auto n : nums)
-        {
-                if (IsPrime(n)) {
-                        primes.push_back(n);
-                }
-        }
-        for (auto n : nums)
-        {
-                if (n <= 10)
-                {
-                        nums.remove(n);
-                }
-        }
-        for (auto n : nums)
-        {
-                for (auto j : primes)
-                {
-                        if (n % j == 0)
-                        {
-                                std::cout << n << " ";
-                        }
-                }
-        }
-        return 0;
+        return product;
 }
+
+
+int SquareOfSums(int n)
+{
+        return pow(n * (n + 1) / 2, 2);
+}
+
+int SumOfSquares(int n)
+{
+        return n*(n+1)*(2*n+1)/6;
+}
+
+int SumSquareDifference(int n)
+{
+        return SquareOfSums(n) - SumOfSquares(n);
+}
+
+int PrimeUpperBound(int n)
+{
+        return n*(log(n) + log(log(n)));
+}
+
+int PrimeLowerBound(int n)
+{
+        return n*(log(n) + log(log(n)) - 1);
+}
+
+
+void SieveOfAtkin(int limit)
+{
+        std::list<int> primes; 
+        bool* sieve = new bool(limit);
+        for (int i = 0; i <= limit; i++)
+                sieve[i] = false;
+
+        sieve[2] = true;
+        sieve[3] = true;
+
+        for (int x = 1; x * x <= limit; x++) {
+                for (int y = 1; y * y <= limit; y++) {
+
+                        // Condition 1
+                        int n = (4 * x * x) + (y * y);
+                        if (n <= limit
+                                && (n % 12 == 1 || n % 12 == 5))
+                                sieve[n] ^= true;
+
+                        // Condition 2
+                        n = (3 * x * x) + (y * y);
+                        if (n <= limit && n % 12 == 7)
+                                sieve[n] ^= true;
+
+                        // Condition 3
+                        n = (3 * x * x) - (y * y);
+                        if (x > y && n <= limit
+                                && n % 12 == 11)
+                                sieve[n] ^= true;
+                }
+        }
+        for (int r = 5; r * r <= limit; r++) {
+                if (sieve[r]) {
+                        for (int i = r * r; i <= limit; i += r * r)
+                                sieve[i] = false;
+                }
+        }
+        for (int a = 1; a <= limit; a++)
+                if (sieve[a])
+                {
+                        primes.push_back(a);
+                        std::cout << a << " ";
+                }
+}
+
 
 int main()
 {
         auto start = std::chrono::high_resolution_clock::now();
-        int problem;
-        problem = smallestevenlydivisible(); 
+        int problem = 0;
+        SieveOfAtkin(114319);
         auto elapsed = std::chrono::high_resolution_clock::now() - start;
         long long microseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
         std::cout << "The answer is " << problem << " This was achieved in " << microseconds << " nanoseconds" << std::endl;
