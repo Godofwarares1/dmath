@@ -14,14 +14,14 @@ int sumofmultiplesof3and5(int x)
 int fib(int x)
 {
         /*prints fibonacci number in the seires*/
-        return(((pow(((1 + pow(5, .5)) / 2), x) - pow(((1 - pow(5, .5)) / 2), (x))) * pow(5, -0.5)));
+        return int (((pow(((1 + pow(5, .5)) / 2), x) - pow(((1 - pow(5, .5)) / 2), (x))) * pow(5, -0.5)));
 }
 
 
 int fibSumEvens(int x)
 {
         /*Find the sum of all even fibanacci numbers up to this number input should be (number in series)/3*/
-        return(pow(5, -0.5)) * (1 - pow(((1 + pow(5, 0.5)) / 2), (3 * x)) / (1 - pow(((1 + pow(5, 0.5)) / 2), 3)) - (1 - pow(((1 - pow(5, 0.5)) / 2), (3 * x)) / (1 - pow(((1 - pow(5, 0.5)) / 2), 3))));
+        return int((pow(5, -0.5)) * (1 - pow(((1 + pow(5, 0.5)) / 2), (3 * x)) / (1 - pow(((1 + pow(5, 0.5)) / 2), 3)) - (1 - pow(((1 - pow(5, 0.5)) / 2), (3 * x)) / (1 - pow(((1 - pow(5, 0.5)) / 2), 3)))));
 }
 
 int problem2_at2(int maxfib)
@@ -109,7 +109,7 @@ int ReverseNumber(int num)
         int rev_num = 0, remainder = 0;
         if (num % 10 == 0)
         {
-                remainder = pow(10,3); 
+                remainder = int(pow(10,3)); 
         }
         while (num != 0) 
         {
@@ -162,7 +162,7 @@ int SmallestEvenlyDivisible(int n)
         int product = 1;
         for (auto j : primes)
         {
-                product *= pow(j,int(pow(n,(1.0 / j))));
+                product *= int(pow(j,int(pow(n,(1.0 / j)))));
         }
         return product;
 }
@@ -170,7 +170,7 @@ int SmallestEvenlyDivisible(int n)
 
 int SquareOfSums(int n)
 {
-        return pow(n * (n + 1) / 2, 2);
+        return int(pow(n * (n + 1) / 2, 2));
 }
 
 int SumOfSquares(int n)
@@ -185,44 +185,50 @@ int SumSquareDifference(int n)
 
 int PrimeUpperBound(int n)
 {
-        return n*(log(n) + log(log(n)));
+        return int(n*(log(n) + log(log(n))));
 }
 
 int PrimeLowerBound(int n)
 {
-        return n*(log(n) + log(log(n)) - 1);
+        return int(n*(log(n) + log(log(n)) - 1));
 }
 
 
-void SieveOfAtkin(int limit)
+int SieveOfAtkin(int limit)
 {
+        const int n = 200000;
         std::list<int> primes; 
-        bool* sieve = new bool(limit);
-        for (int i = 0; i <= limit; i++)
+        bool sieve[n] = {false}; 
+        for (int i = 0; i < limit + 1; i++)
+        {
                 sieve[i] = false;
-
+        }
         sieve[2] = true;
-        sieve[3] = true;
+        sieve[3] = true; 
 
         for (int x = 1; x * x <= limit; x++) {
                 for (int y = 1; y * y <= limit; y++) {
 
                         // Condition 1
                         int n = (4 * x * x) + (y * y);
-                        if (n <= limit
-                                && (n % 12 == 1 || n % 12 == 5))
-                                sieve[n] ^= true;
-
+                        if (n <= limit && (n % 12 == 1 || n % 12 == 5))
+                        {
+                                sieve[n] ^= true; 
+                        }
+                                
                         // Condition 2
                         n = (3 * x * x) + (y * y);
                         if (n <= limit && n % 12 == 7)
-                                sieve[n] ^= true;
+                        {
+                                sieve[n] ^= true; 
+                        }
 
                         // Condition 3
                         n = (3 * x * x) - (y * y);
-                        if (x > y && n <= limit
-                                && n % 12 == 11)
+                        if (x > y && n <= limit && n % 12 == 11)
+                        {
                                 sieve[n] ^= true;
+                        }                               
                 }
         }
         for (int r = 5; r * r <= limit; r++) {
@@ -235,16 +241,21 @@ void SieveOfAtkin(int limit)
                 if (sieve[a])
                 {
                         primes.push_back(a);
-                        std::cout << a << " ";
                 }
+        auto prime = primes.begin();
+        std::advance(prime, 10001);
+        return int(*prime);
 }
+
+
+
 
 
 int main()
 {
         auto start = std::chrono::high_resolution_clock::now();
         int problem = 0;
-        SieveOfAtkin(114319);
+        problem = SieveOfAtkin(PrimeUpperBound(10001));
         auto elapsed = std::chrono::high_resolution_clock::now() - start;
         long long microseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
         std::cout << "The answer is " << problem << " This was achieved in " << microseconds << " nanoseconds" << std::endl;
