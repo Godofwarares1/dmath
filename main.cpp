@@ -195,23 +195,23 @@ int PrimeLowerBound(int n)
 }
 
 
-int SieveOfAtkin(int limit)
+long long int SieveOfAtkin(long long int limit, int id)
 {
-        const int n = 200000;
-        std::list<int> primes; 
-        bool sieve[n] = {false}; 
-        for (int i = 0; i < limit + 1; i++)
+        const long long int n = 20000000;
+        std::list<long long int> primes; 
+        static bool sieve[n] = {false}; 
+        for (long long int i = 0; i < limit + 1; i++)
         {
                 sieve[i] = false;
         }
         sieve[2] = true;
         sieve[3] = true; 
 
-        for (int x = 1; x * x <= limit; x++) {
-                for (int y = 1; y * y <= limit; y++) {
+        for (long long int x = 1; x * x <= limit; x++) {
+                for (long long int y = 1; y * y <= limit; y++) {
 
                         // Condition 1
-                        int n = (4 * x * x) + (y * y);
+                        long long int n = (4 * x * x) + (y * y);
                         if (n <= limit && (n % 12 == 1 || n % 12 == 5))
                         {
                                 sieve[n] ^= true; 
@@ -232,69 +232,89 @@ int SieveOfAtkin(int limit)
                         }                               
                 }
         }
-        for (int r = 5; r * r <= limit; r++) {
+        for (long long int r = 5; r * r <= limit; r++) {
                 if (sieve[r]) {
-                        for (int i = r * r; i <= limit; i += r * r)
+                        for (long long int i = r * r; i <= limit; i += r * r)
                                 sieve[i] = false;
                 }
         }
-        for (int a = 1; a <= limit; a++)
-                if (sieve[a])
-                {
-                        primes.push_back(a);
-                }
-        auto prime = primes.begin();
-        std::advance(prime, 10001);
-        return int(*prime);
+        /* produces nth prime*/
+        if (id == 0)
+        {
+                for (long long int a = 1; a <= limit; a++)
+                        if (sieve[a])
+                        {
+                                primes.push_back(a);
+                        }
+                auto prime = primes.begin();
+                std::advance(prime, 10001);
+                return long long int(*prime);
+        }
+        /*sum of primes under limit*/
+        if (id == 1)
+        {
+                long long int sum = 0;
+                for (long long int a = 1; a <= limit; a++)
+                        if (sieve[a])
+                        {
+                                sum += a;
+                        }
+                return sum;
+        }
+        return 0;
+        
 }
 
-int IntToArray(std::string n) 
+int pythagoreantriplet(int n)
 {
-        int num[1000] = { 0 };
-        int product[1000];
-        int max;
+        double c = 0.0;
+        for (int a = 1; a < n; a++)
+        {
+                for (int b = 1; b < n; b++)
+                {
+                        c = pow(pow(a, 2) + pow(b, 2), 0.5);
+                        if (a + b + c == n)
+                        {
+                                return (a * b * c);
+                        }
+                }
+        }
+        return 0;
+}
+
+auto IntToArray(std::string n) 
+{
+        long long int num[1000];
+        long long int product[1000];
+        long long int max = 1;
         int l = sizeof(product) / sizeof(product[0]);
-        for (int o = 0; o < l; o++)
+        for (int i = 0; i < l; i++)
         {
-                product[o] = 1;
+                num[i] = (n[i] - 48);
+                product[i] = 1;
         }
-        for (int i = 0; i < n.size(); i++)
-        {
-                num[i] = (n[i]-48);
-        }
-        for (int i : num) {
-                std::cout << i << " ";
-        }
-        std::cout << std::endl;
-        for (int j = 0; j < l; j++)
+        for (int j = 0; j < l - 13; j++)
         {
                 for (int k = j; k < j + 13; k++)
                 {
                         product[j] *= num[k];
                 }
-        }
-        max = product[0];
-        for (int i = 1; i < l; i++)
-        {
-                if (product[i] > max)
+                if (product[j] > max)
                 {
-                        max = product[i];
+                        max = product[j];
                 }
-                       
-        }
-        for (int p : product)
-        {
-                std::cout << p << " ";
         }
         return max;
 }
 
 
+
+
 int main()
 {
         auto start = std::chrono::high_resolution_clock::now();
-        int problem = 0;
-        problem = IntToArray("7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450");
+        long long int problem = 0;
+        problem = SieveOfAtkin(2000000, 1);
         auto elapsed = std::chrono::high_resolution_clock::now() - start;
         long long microseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
         std::cout << "The answer is " << problem << " This was achieved in " << microseconds << " nanoseconds" << std::endl;
